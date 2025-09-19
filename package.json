@@ -1,0 +1,29 @@
+{
+  "name": "floodsense",
+  "version": "1.0.0",
+  "description": "This project is a Flood Impact Analysis Proof of Concept (POC) that uses PostGIS-enabled PostgreSQL to store geographic and elevation data of Delhi regions. The backend, built with Node.js, TypeScript, and Prisma ORM, exposes REST APIs to fetch region polygons, average elevation, and water level data. The system allows dynamic calculation of flood-affected areas based on current water levels, and serves GeoJSON data for mapping and visualization on a frontend platform. The POC demonstrates real-time flood monitoring, water level management, and geographic data integration for decision-making.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --watch src --exec ts-node src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "keywords": [],
+  "author": "Kushal Ghosh",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.5.2",
+    "nodemon": "^3.1.10",
+    "prisma": "^6.16.2",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.16.2",
+    "cors": "^2.8.5",
+    "express": "^5.1.0"
+  }
+}
