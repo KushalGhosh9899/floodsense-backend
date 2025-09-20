@@ -8,4 +8,26 @@ export class RegionsRepoImpl implements RegionsRepo {
         const regions = await DbClient.regions.findMany();
         return RegionsMapper.toEntityList(regions);
     }
+    async getRegionDetailByID(region_id: number): Promise<RegionEntity> {
+        const regions = await DbClient.$queryRawUnsafe<any>(
+            `
+      SELECT 
+        id, uuid, name, description, parent_id,
+        ST_AsGeoJSON(geom)::json as geom
+      FROM regions
+      WHERE id = $1::int
+    `,
+            region_id
+        );
+
+        if (!regions || regions.length === 0) {
+            throw new Error("Region not found");
+        }
+
+        const region = regions[0];
+
+        return RegionsMapper.toEntity(region);
+    }
+
+
 }
