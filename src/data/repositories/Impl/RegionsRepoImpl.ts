@@ -6,6 +6,6 @@ import { RegionEntity } from "../../entities/RegionEntity";
 export class RegionsRepoImpl implements RegionsRepo {
     async getAllRegions(): Promise<RegionEntity[]> {
         const regions = await DbClient.regions.findMany();
-        return RegionsMapper.toEntity(regions);
+        return RegionsMapper.toEntityList(regions);
     }
 }
