@@ -1,4 +1,5 @@
 import { DemDataEntity } from "../../entities/DemDataEntity";
+import { FloodAreasEntity } from "../../entities/FloodAreasEntity";
 import { RegionEntity } from "../../entities/RegionEntity";
 import { EntityMapper } from "../../mappers/EntityMapper";
 import { RegionsMapper } from "../../mappers/RegionsMapper";
@@ -28,11 +29,20 @@ export class WaterLevelsRepoImpl implements WaterLevelsRepo {
     }
     // Fetch region by UUID
     async getRegionByUUID(region_uuid: string): Promise<RegionEntity | null> {
-        const region = await DbClient.regions.findUnique({
-            where: { uuid: region_uuid },
-        });
+        const regions = await DbClient.$queryRawUnsafe<any>(
+            `
+      SELECT 
+        id, uuid, name, description, parent_id,
+        ST_AsGeoJSON(geom)::json as geom
+      FROM regions
+      WHERE uuid = $1::uuid
+    `,
+            region_uuid
+        );
 
-        if (!region) return null;
+        if (!regions || regions.length === 0) return null;
+
+        const region = regions[0];
 
         return RegionsMapper.toEntity(region);
     }
@@ -83,4 +93,17 @@ export class WaterLevelsRepoImpl implements WaterLevelsRepo {
         // Step 3: Map to entities
         return demRecords.map((d) => EntityMapper.mapToDemEntity(d));
     }
+
+    async getAllFloodedAreas(): Promise<FloodAreasEntity[] | []> {
+        const floodedAreas = await DbClient.flood_impact_area.findMany({
+            include: {
+                regions: true,
+            },
+        });
+
+        if (!floodedAreas || floodedAreas.length === 0) return [];
+
+        return floodedAreas.map(fa => EntityMapper.mapToFloodAreasEntity(fa));
+    }
+
 }

@@ -1,4 +1,5 @@
 import { DemDataEntity } from "../entities/DemDataEntity";
+import { FloodAreasEntity } from "../entities/FloodAreasEntity";
 import { RegionEntity } from "../entities/RegionEntity";
 
 export interface WaterLevelsRepo {
@@ -7,4 +8,5 @@ export interface WaterLevelsRepo {
     getDemDataByRegionId(region_id: number): Promise<DemDataEntity[]>;
     markFlooded(region_id: number): Promise<boolean>;
     getDemListOfSubRegionsByRegionId(region_id: number): Promise<DemDataEntity[]>;
+    getAllFloodedAreas(): Promise<FloodAreasEntity[] | []>;
 }
