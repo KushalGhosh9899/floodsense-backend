@@ -30,7 +30,7 @@ model flood_impact_area {
 
 model regions {
   id                Int                     @id @default(autoincrement())
-  uuid              String?                 @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  uuid              String?                 @default(dbgenerated("gen_random_uuid()")) @db.Uuid @unique
   name              String                  @db.VarChar(255)
   description       String?
   geom              Unsupported("geometry")

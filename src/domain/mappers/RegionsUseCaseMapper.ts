@@ -12,7 +12,7 @@ export class RegionsUseCaseMapper {
         regions.forEach((r) => {
             if (!r.parent_id || r.parent_id === -1) {
                 regionMap.set(r.id, {
-                    id: r.id.toString(),
+                    id: r.uuid,
                     name: r.name,
                     description: r.description ?? "",
                     sub_regions: [],
@@ -26,7 +26,7 @@ export class RegionsUseCaseMapper {
                 const parent = regionMap.get(r.parent_id);
                 if (parent) {
                     parent.sub_regions!.push({
-                        id: r.id.toString(),
+                        id: r.uuid,
                         name: r.name,
                         description: r.description ?? ""
                     });
