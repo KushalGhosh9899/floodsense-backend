@@ -6,13 +6,17 @@ import { Utility } from "../../common/utility";
 import { AddWaterLevelUseCase } from "../../domain/usecases/AddWaterLevelUseCase";
 import { UseCaseDI } from "../../domain/UseCaseDI";
 import { GetAllFloodedRegionsUseCase } from "../../domain/usecases/GetAllFloodedRegionsUseCase";
+import { AnalyseFloodImpactDTO } from "../DTO/Request/AnalyseFloodImpactDTO";
+import { AnalyseFloodImpactUseCase } from "../../domain/usecases/AnalyseFloodImpactUseCase";
 
 export class WaterLevelsController {
   private addWaterLevelUseCase: AddWaterLevelUseCase;
   private getAllFloodedRegionsUseCase: GetAllFloodedRegionsUseCase;
+  private analyseFloodImpactUseCase: AnalyseFloodImpactUseCase
   constructor() {
     this.addWaterLevelUseCase = UseCaseDI.addWaterLevelUseCase();
     this.getAllFloodedRegionsUseCase = UseCaseDI.getAllFloodedRegionsUseCase();
+    this.analyseFloodImpactUseCase = UseCaseDI.analyseFloodImpactUseCase();
   }
 
   async addWaterLevel(req: Request, res: Response) {
@@ -106,6 +110,44 @@ export class WaterLevelsController {
 
       if (result.length != 0) {
         return res.json(new SuccessResponse(result, "Flood impacted areas"));
+      } else {
+        return res.status(404).json(new ErrorResponse("No Flood Impacted Area Found"));
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json(new ErrorResponse("Internal server error"));
+    }
+  }
+  async analyseFloodImpactedArea(req: Request, res: Response){
+    try {
+      const body = req.body as Partial<AnalyseFloodImpactDTO>;
+
+      // Basic validation
+      if (!body.region_id || typeof body.region_id !== "string") {
+        return res.status(400).json(new ErrorResponse("region_id (uuid) is required"));
+      }
+
+      if (!Utility.validateUUID(body.region_id)) {
+        res.status(400).json(new ErrorResponse("region_id must be a valid UUID"));
+        return null;
+      }
+
+      if (
+        body.water_levels_in_meters === undefined ||
+        typeof body.water_levels_in_meters !== "number"
+      ) {
+        return res.status(400).json(new ErrorResponse("water_levels_in_meters must be a number"));
+      }
+
+      const dto: AnalyseFloodImpactDTO = {
+        region_id: body.region_id,
+        water_levels_in_meters:body.water_levels_in_meters
+      };
+
+      const result = await this.analyseFloodImpactUseCase.execute(dto);
+
+      if (result.length != 0) {
+        return res.json(new SuccessResponse(result, "Analysis of flood impacted areas"));
       } else {
         return res.status(404).json(new ErrorResponse("No Flood Impacted Area Found"));
       }

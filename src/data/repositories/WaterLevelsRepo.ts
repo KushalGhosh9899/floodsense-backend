@@ -9,4 +9,5 @@ export interface WaterLevelsRepo {
     markFlooded(region_id: number): Promise<boolean>;
     getDemListOfSubRegionsByRegionId(region_id: number): Promise<DemDataEntity[]>;
     getAllFloodedAreas(): Promise<FloodAreasEntity[] | []>;
+    getDemDetailByRegionId(region_id: number): Promise<DemDataEntity>;
 }

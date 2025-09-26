@@ -16,7 +16,8 @@ const waterLevelsController = new WaterLevelsController();
 
 app.get('/regions/all', (req, res) => controller.getRegions(req, res));
 app.post("/water-levels", (req, res) => waterLevelsController.addWaterLevel(req, res));
-app.get("/flood/impacted-areas", (req, res) => waterLevelsController.getFloodImpactedArea(req, res));
+app.post("/flood/impacted-areas", (req, res) => waterLevelsController.getFloodImpactedArea(req, res));
+app.post("/flood/analyse-areas", (req, res) => waterLevelsController.analyseFloodImpactedArea(req, res));
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {

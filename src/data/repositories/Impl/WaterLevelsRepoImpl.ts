@@ -58,6 +58,18 @@ export class WaterLevelsRepoImpl implements WaterLevelsRepo {
         );
     }
 
+    async getDemDetailByRegionId(region_id: number): Promise<DemDataEntity>{
+        const demRecords = await DbClient.dem_data.findMany({
+            where: { region_id },
+        });
+
+        if (!demRecords || demRecords.length === 0){
+            throw new Error("No DEM data for this region")
+        }
+
+        return EntityMapper.mapToDemEntity(demRecords[0]);
+    }
+
     // Mark a region as flooded
     async markFlooded(region_id: number): Promise<boolean> {
         try {

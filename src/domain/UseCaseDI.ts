@@ -1,7 +1,9 @@
 import { AddWaterLevelUseCase } from "./usecases/AddWaterLevelUseCase";
+import { AnalyseFloodImpactUseCase } from "./usecases/AnalyseFloodImpactUseCase";
 import { GetAllFloodedRegionsUseCase } from "./usecases/GetAllFloodedRegionsUseCase";
 import { GetAllRegionsUseCase } from "./usecases/GetAllRegionsUseCase";
 import { AddWaterLevelUseCaseImpl } from "./usecases/Impl/AddWaterLevelUseCaseImpl";
+import { AnalyseFloodImpactUseCaseImpl } from "./usecases/Impl/AnalyseFloodImpactUseCaseImpl";
 import { GetAllFloodedRegionsUseCaseImpl } from "./usecases/Impl/GetAllFloodedRegionsUseCaseImpl";
 import { GetAllRegionsUseCaseImpl } from "./usecases/Impl/GetAllRegionsUseCaseImpl";
 
@@ -10,6 +12,7 @@ export class UseCaseDI {
     private static getRegionsUseCaseInstance: GetAllRegionsUseCase;
     private static addWaterLevelsUseCaseInstance: AddWaterLevelUseCase;
     private static getAllFloodedRegionsUseCaseInstance: GetAllFloodedRegionsUseCase;
+    private static analyseFloodImpactAreaUseCaseInstance: AnalyseFloodImpactUseCase;
 
     // Factory method to get GetRegionsUseCase singleton
     public static getRegionsUseCase(): GetAllRegionsUseCase {
@@ -29,5 +32,12 @@ export class UseCaseDI {
             UseCaseDI.getAllFloodedRegionsUseCaseInstance = new GetAllFloodedRegionsUseCaseImpl();
         }
         return UseCaseDI.getAllFloodedRegionsUseCaseInstance;
+    }
+
+    public static analyseFloodImpactUseCase(): AnalyseFloodImpactUseCase {
+        if (!UseCaseDI.analyseFloodImpactAreaUseCaseInstance) {
+            UseCaseDI.analyseFloodImpactAreaUseCaseInstance = new AnalyseFloodImpactUseCaseImpl();
+        }
+        return UseCaseDI.analyseFloodImpactAreaUseCaseInstance;
     }
 }
