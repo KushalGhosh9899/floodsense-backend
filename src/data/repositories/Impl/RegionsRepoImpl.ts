@@ -30,4 +30,24 @@ export class RegionsRepoImpl implements RegionsRepo {
     }
 
 
+    async getAllSubRegions(region_id: number): Promise<RegionEntity[]>{
+        const regions = await DbClient.$queryRawUnsafe<any>(
+            `
+      SELECT 
+        id, uuid, name, description, parent_id,
+        ST_AsGeoJSON(geom)::json as geom
+      FROM regions
+      WHERE parent_id = $1::int
+    `,
+            region_id
+        );
+
+        if (!regions || regions.length === 0) {
+            throw new Error("No subregions found");
+        }
+
+        return RegionsMapper.toEntityList(regions);
+    }
+
+
 }
