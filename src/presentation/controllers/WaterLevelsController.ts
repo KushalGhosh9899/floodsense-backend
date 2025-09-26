@@ -149,7 +149,7 @@ export class WaterLevelsController {
       if (result.length != 0) {
         return res.json(new SuccessResponse(result, "Analysis of flood impacted areas"));
       } else {
-        return res.status(404).json(new ErrorResponse("No Flood Impacted Area Found"));
+        return res.status(200).json(new SuccessResponse([] ,"No Flood Impacted Area Found"));
       }
     } catch (error) {
       console.error(error);
